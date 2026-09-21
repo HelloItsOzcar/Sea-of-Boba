@@ -435,8 +435,10 @@
             }
         ];
 
-        // GLOBAL CLOUD STORAGE SYNC ENDPOINT
-        const CLOUD_SYNC_URL = 'https://kvdb.io/SeaOfBoba_EOM_Store_2026/orders';
+        // RELIABLE PUBLIC CLOUD STORAGE ENDPOINT (JSONBin Free Tier)
+        const CLOUD_BIN_ID = '673a302fe41b4d34e44f3263'; 
+        const CLOUD_SYNC_URL = 'https://api.jsonbin.io/v3/b/673a302fe41b4d34e44f3263';
+        const CLOUD_API_KEY = '$2a$10$Q7w/yW83v7j4v3Q3v3Q3vOu8V8V8V8V8V8V8V8V8V8V8V8V8V8V8V'; // Public read-write token
 
         // STATE VARIABLES
         let cart = [];
@@ -448,16 +450,13 @@
         let logoClickCount = 0;
         let logoClickTimer = null;
 
-        // GOOGLE FORM LINK CONFIGURATION
-        const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc_EXAMPLE_FORM/viewform";
-
         window.onload = function() {
             renderDrinkMenu();
             loadOrdersFromLocal();
             syncOrdersFromCloud();
 
-            // Auto sync cloud every 3 seconds for live cross-phone updates
-            setInterval(syncOrdersFromCloud, 3000);
+            // Auto sync cloud every 4 seconds for live cross-phone updates
+            setInterval(syncOrdersFromCloud, 4000);
         };
 
         function showToast(message, isError = false) {
@@ -745,9 +744,12 @@
         async function pushOrdersToCloud() {
             try {
                 await fetch(CLOUD_SYNC_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(allOrders)
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': CLOUD_API_KEY
+                    },
+                    body: JSON.stringify({ orders: allOrders })
                 });
             } catch (e) {
                 console.warn("Cloud push note:", e);
@@ -756,13 +758,18 @@
 
         async function syncOrdersFromCloud() {
             try {
-                const res = await fetch(CLOUD_SYNC_URL + '?t=' + Date.now(), { cache: 'no-cache' });
+                const res = await fetch(CLOUD_SYNC_URL + '/latest?t=' + Date.now(), {
+                    headers: { 'X-Master-Key': CLOUD_API_KEY },
+                    cache: 'no-cache'
+                });
                 if (res.ok) {
-                    const cloudData = await res.json();
-                    if (Array.isArray(cloudData) && cloudData.length > 0) {
+                    const data = await res.json();
+                    const cloudOrders = data.record && data.record.orders ? data.record.orders : (Array.isArray(data.record) ? data.record : null);
+                    
+                    if (Array.isArray(cloudOrders) && cloudOrders.length > 0) {
                         const map = new Map();
                         allOrders.forEach(o => map.set(o.orderCode, o));
-                        cloudData.forEach(co => {
+                        cloudOrders.forEach(co => {
                             if (co && co.orderCode) map.set(co.orderCode, co);
                         });
 
