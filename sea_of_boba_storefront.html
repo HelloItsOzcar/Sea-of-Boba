@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sea of Boba | Earl of March Secondary School</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        boba: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            dark: '#082f49'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .glass-header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+        }
+        .boba-card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-full flex flex-col font-sans antialiased">
+
+    <!-- ANNOUNCEMENT BANNER -->
+    <div class="bg-boba-700 text-white text-xs font-semibold py-2 px-4 text-center tracking-wide">
+        <span>📍 Earl of March Secondary School • Delivery at Beaverbrook Library (11:40 AM - 11:50 AM)</span>
+    </div>
+
+    <!-- MAIN HEADER NAV -->
+    <header class="sticky top-0 z-30 glass-header border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Discreet Secret Owner Portal Trigger: Double Click Logo -->
+            <div onclick="handleLogoClick()" class="flex items-center gap-3 cursor-pointer select-none group" title="Sea of Boba">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-boba-600 to-teal-400 flex items-center justify-center text-white text-xl shadow-md group-hover:scale-105 transition-transform">
+                    🧋
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg text-slate-900 tracking-tight leading-none">Sea of Boba</h1>
+                    <span class="text-[11px] font-medium text-boba-600">Earl of March Pre-Orders</span>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-3">
+                <button onclick="openTrackModal()" class="px-3.5 py-2 text-xs font-bold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-magnifying-glass text-boba-600"></i>
+                    <span>Track Order</span>
+                </button>
+
+                <button onclick="toggleCartDrawer(true)" class="relative p-2.5 rounded-xl bg-boba-600 hover:bg-boba-700 text-white transition shadow-sm">
+                    <i class="fa-solid fa-cart-shopping text-sm"></i>
+                    <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-amber-400 text-slate-900 font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 space-y-8">
+
+        <!-- HERO SECTION -->
+        <section class="bg-gradient-to-br from-boba-900 via-boba-800 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="relative z-10 space-y-3 max-w-2xl">
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-boba-500/30 text-boba-200 border border-boba-400/30 inline-block">
+                    Earl of March Secondary School
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+                    Fresh CoCo Boba Delivered to Beaverbrook Library
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Order your favorite bubble tea before 11:00 AM. Pick up during break at 11:40 AM – 11:50 AM right in front of Beaverbrook Library!
+                </p>
+                <div class="pt-2 flex flex-wrap gap-3">
+                    <a href="#menu" class="px-5 py-2.5 rounded-xl bg-boba-500 hover:bg-boba-400 font-bold text-xs shadow-lg transition inline-flex items-center gap-2">
+                        <span>Order Now</span>
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU SECTION -->
+        <section id="menu" class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-black text-slate-900 tracking-tight">CoCo Menu Selection</h3>
+                    <p class="text-xs text-slate-500">Select your drink to customize size, sweetness, and ice level.</p>
+                </div>
+            </div>
+
+            <!-- Drink Cards Grid -->
+            <div id="drink-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- DRINK CUSTOMIZATION MODAL -->
+    <div id="modal-customize" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('modal-customize')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Drink Header Info -->
+            <div class="flex items-center gap-4">
+                <img id="cust-img" src="" alt="Drink" class="w-20 h-20 rounded-2xl object-cover bg-slate-100">
+                <div>
+                    <h4 id="cust-title" class="font-bold text-slate-900 text-lg">Drink Title</h4>
+                    <p id="cust-desc" class="text-xs text-slate-500 mt-0.5">Drink description</p>
+                    <span id="cust-base-price" class="text-sm font-black text-boba-600 mt-1 block">$0.00</span>
+                </div>
+            </div>
+
+            <!-- Customizations -->
+            <div class="space-y-4 pt-2 border-t border-slate-100">
+                <!-- Size Selection -->
+                <div id="size-selector-container">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Select Size</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="btn-size-med" onclick="selectSize('Medium')" class="size-btn py-2.5 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:border-boba-500">
+                            Medium (<span id="price-med-lbl">$0.00</span>)
+                        </button>
+                        <button id="btn-size-lrg" onclick="selectSize('Large')" class="size-btn py-2.5 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:border-boba-500">
+                            Large (<span id="price-lrg-lbl">$0.00</span>)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sugar Level -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Sweetness Level</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="selectSweetness('100%')" class="sweet-btn py-2 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700">100%</button>
+                        <button onclick="selectSweetness('70%')" class="sweet-btn py-2 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700">70%</button>
+                        <button onclick="selectSweetness('50%')" class="sweet-btn py-2 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700">50%</button>
+                        <button onclick="selectSweetness('0%')" class="sweet-btn py-2 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700">0%</button>
+                    </div>
+                </div>
+
+                <!-- Ice Level -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Ice Level</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="selectIce('Regular Ice')" class="ice-btn py-2 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700">Regular Ice</button>
+                        <button onclick="selectIce('Less Ice')" class="ice-btn py-2 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700">Less Ice</button>
+                        <button onclick="selectIce('No Ice')" class="ice-btn py-2 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700">No Ice</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Action Footer -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                <div>
+                    <span class="text-[11px] text-slate-400 uppercase font-semibold">Total</span>
+                    <div id="cust-calculated-price" class="text-xl font-black text-slate-900">$0.00</div>
+                </div>
+                <button onclick="confirmAddToCart()" class="px-6 py-3 rounded-2xl bg-boba-600 hover:bg-boba-700 text-white font-bold text-xs shadow-lg transition">
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE-OVER CART DRAWER -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
+        <div onclick="toggleCartDrawer(false)" class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
+        <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col justify-between p-6">
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="font-extrabold text-slate-900 text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-basket-shopping text-boba-600"></i>
+                        <span>Your Order Cart</span>
+                    </h3>
+                    <button onclick="toggleCartDrawer(false)" class="text-slate-400 hover:text-slate-600 text-lg">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Items List -->
+                <div id="cart-items-container" class="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- Empty Cart State -->
+                <div id="cart-empty-state" class="text-center py-10 space-y-3">
+                    <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-2xl text-slate-400">
+                        🧋
+                    </div>
+                    <p class="text-xs text-slate-500 font-medium">Your cart is currently empty.</p>
+                    <button onclick="exploreMenuFromCart()" class="px-4 py-2 rounded-xl bg-boba-600 hover:bg-boba-700 text-white font-bold text-xs shadow-md transition">
+                        Explore Menu
+                    </button>
+                </div>
+            </div>
+
+            <!-- Checkout Controls -->
+            <div id="cart-checkout-section" class="border-t border-slate-100 pt-4 space-y-4">
+                <!-- Customer Details Form -->
+                <div class="space-y-2">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Your Full Name *</label>
+                        <input type="text" id="cust-checkout-name" placeholder="First & Last Name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-boba-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Phone Number (Required for pickup SMS) *</label>
+                        <input type="tel" id="cust-checkout-phone" placeholder="613-xxx-xxxx" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-boba-500">
+                    </div>
+                </div>
+
+                <!-- Total Summary -->
+                <div class="flex justify-between items-center text-sm font-extrabold text-slate-900 pt-2 border-t border-slate-100">
+                    <span>Order Subtotal</span>
+                    <span id="cart-drawer-total">$0.00</span>
+                </div>
+
+                <button onclick="processOrderCheckout()" id="btn-submit-order" class="w-full py-3.5 rounded-2xl bg-boba-600 hover:bg-boba-700 text-white font-extrabold text-xs shadow-lg transition flex items-center justify-center gap-2">
+                    <span>Submit Order & Get Order Code</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ORDER RECEIPT MODAL -->
+    <div id="modal-receipt" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 text-center relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('modal-receipt')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-black text-slate-900">Order Placed Successfully!</h3>
+                <p class="text-xs text-slate-500 mt-1">Please complete your Interac e-Transfer to confirm.</p>
+            </div>
+
+            <!-- Code Banner -->
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <span class="text-[11px] font-bold uppercase text-slate-400 block">Your Order Code</span>
+                <span id="receipt-code" class="text-3xl font-black text-boba-600 font-mono tracking-wider">SOB-0000</span>
+                <p class="text-[11px] text-slate-500 mt-1">Include this code in your e-Transfer message!</p>
+            </div>
+
+            <!-- Live Payment Status Box -->
+            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-left space-y-2">
+                <div class="flex justify-between items-center text-xs">
+                    <span class="font-bold text-amber-900">Payment Status:</span>
+                    <span id="receipt-status-badge" class="px-2 py-0.5 rounded-full font-bold bg-amber-200 text-amber-900 text-[10px]">
+                        ⏳ Awaiting e-Transfer
+                    </span>
+                </div>
+                <p id="receipt-status-msg" class="text-xs text-amber-800 leading-relaxed">
+                    Send e-Transfer of <strong id="receipt-total-due">$0.00</strong> to <strong>orders@seaofboba.com</strong>.
+                </p>
+            </div>
+
+            <div class="text-xs text-slate-500 text-left bg-slate-50 p-3 rounded-xl space-y-1">
+                <span class="font-bold text-slate-700 block">Pickup Information:</span>
+                <div>📍 Beaverbrook Library Entrance</div>
+                <div>⏰ Break Time (11:40 AM – 11:50 AM)</div>
+            </div>
+
+            <button onclick="closeModal('modal-receipt')" class="w-full py-3 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition">
+                Done & Close
+            </button>
+        </div>
+    </div>
+
+    <!-- TRACK ORDER LOOKUP MODAL -->
+    <div id="modal-track" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 text-center relative">
+            <button onclick="closeModal('modal-track')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="text-lg font-black text-slate-900">Track Your Order</h3>
+            <p class="text-xs text-slate-500">Enter your 7-character Order Code (e.g. SOB-4921)</p>
+
+            <div class="space-y-2">
+                <input type="text" id="track-code-input" placeholder="SOB-XXXX" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 text-center text-sm font-mono uppercase font-bold text-slate-800 focus:outline-none focus:border-boba-500">
+                <button onclick="lookupOrderCode()" class="w-full py-2.5 rounded-xl bg-boba-600 hover:bg-boba-700 text-white font-bold text-xs transition">
+                    Search Order
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECRET OWNER PASSCODE MODAL -->
+    <div id="modal-pin" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-xs w-full p-6 shadow-2xl space-y-4 text-center relative">
+            <button onclick="closeModal('modal-pin')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-12 h-12 rounded-2xl bg-boba-100 text-boba-600 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <h3 class="text-base font-black text-slate-900">Owner Access</h3>
+            <div class="space-y-2">
+                <input type="password" id="pin-input" placeholder="Enter PIN" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 text-center text-sm font-bold text-slate-800 focus:outline-none focus:border-boba-500">
+                <button onclick="submitOwnerPin()" class="w-full py-2.5 rounded-xl bg-boba-600 hover:bg-boba-700 text-white font-bold text-xs transition">
+                    Unlock Portal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECRET OWNER PORTAL MODAL -->
+    <div id="modal-owner-portal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-5 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('modal-owner-portal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                    <h3 class="text-xl font-black text-slate-900">Sea of Boba Owner Portal</h3>
+                    <p class="text-xs text-slate-500">Live Student Order & e-Transfer Verification Hub</p>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Live Cloud Sync</span>
+                </span>
+            </div>
+
+            <!-- CoCo Order Summary Checklist -->
+            <div class="p-4 rounded-2xl bg-slate-900 text-white space-y-2">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">CoCo Kanata Pre-Order Summary</span>
+                <div id="owner-coco-checklist" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+                    <!-- Calculated dynamically -->
+                </div>
+            </div>
+
+            <!-- Student Orders List -->
+            <div class="space-y-3">
+                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Recent Student Orders</h4>
+                <div id="owner-orders-list" class="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
+                    <!-- Dynamic orders list -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION MESSAGE CONTAINER -->
+    <div id="toast-msg" class="fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-2xl flex items-center gap-2 transition-all duration-300">
+        <span id="toast-text">Notification message</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs border-t border-slate-800 mt-auto">
+        <div class="max-w-5xl mx-auto px-4 space-y-1">
+            <p>Sea of Boba — Earl of March Secondary School Student Service</p>
+            <p class="text-slate-500">
+                <!-- Secret Footer Trigger -->
+                <span onclick="triggerOwnerAuth()" class="cursor-pointer hover:text-slate-400 select-none">©</span> 2026 Sea of Boba. All orders fulfilled via CoCo Kanata.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // DRINK MENU DATA WITH EXACT PRICING & PROFIT MARGINS
+        const MENU_DRINKS = [
+            {
+                id: 'pearl-milk-tea',
+                name: 'Pearl Milk Tea',
+                desc: 'Classic milk tea brewed fresh with chewy brown sugar tapioca pearls.',
+                img: 'https://images.unsplash.com/photo-1558857563-b371033873b8?auto=format&fit=crop&w=600&q=80',
+                prices: { Medium: 8.00, Large: 8.50 },
+                largeOnly: false
+            },
+            {
+                id: '3-guys',
+                name: '3 Guys Milk Tea',
+                desc: 'CoCo signature milk tea loaded with pearls, egg pudding, and grass jelly.',
+                img: 'https://images.unsplash.com/photo-1541658016709-82535e94bc69?auto=format&fit=crop&w=600&q=80',
+                prices: { Medium: 8.40, Large: 8.90 },
+                largeOnly: false
+            },
+            {
+                id: 'jasmine-milk-tea',
+                name: 'Brown Sugar Pearl Jasmine Milk Tea',
+                desc: 'Fragrant jasmine green milk tea paired with rich brown sugar tapioca.',
+                img: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80',
+                prices: { Medium: 8.60, Large: 9.10 },
+                largeOnly: false
+            },
+            {
+                id: 'matcha-berry',
+                name: 'Matcha Berry Latte',
+                desc: 'Japanese Uji matcha layered with fresh milk and real strawberry puree.',
+                img: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80',
+                prices: { Large: 8.90 },
+                largeOnly: true
+            },
+            {
+                id: 'bubble-gaga',
+                name: 'Bubble Gaga',
+                desc: 'Passion fruit green tea topped with coconut jelly and tapioca pearls.',
+                img: 'https://images.unsplash.com/photo-1525385133512-2f3bdd039054?auto=format&fit=crop&w=600&q=80',
+                prices: { Large: 8.80 },
+                largeOnly: true
+            },
+            {
+                id: 'mango-pomelo',
+                name: 'Mango Pomelo Sago Smoothie',
+                desc: 'Creamy mango slush blended with coconut milk, sago pearls, and pomelo.',
+                img: 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?auto=format&fit=crop&w=600&q=80',
+                prices: { Large: 9.30 },
+                largeOnly: true
+            }
+        ];
+
+        // GLOBAL CLOUD STORAGE SYNC ENDPOINT
+        const CLOUD_SYNC_URL = 'https://kvdb.io/SeaOfBoba_EOM_Store_2026/orders';
+
+        // STATE VARIABLES
+        let cart = [];
+        let currentCustomizingDrink = null;
+        let selectedSize = 'Large';
+        let selectedSweetness = '100%';
+        let selectedIce = 'Regular Ice';
+        let allOrders = [];
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+
+        // GOOGLE FORM LINK CONFIGURATION
+        const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc_EXAMPLE_FORM/viewform";
+
+        window.onload = function() {
+            renderDrinkMenu();
+            loadOrdersFromLocal();
+            syncOrdersFromCloud();
+
+            // Auto sync cloud every 3 seconds for live cross-phone updates
+            setInterval(syncOrdersFromCloud, 3000);
+        };
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast-msg');
+            const toastText = document.getElementById('toast-text');
+            if (!toast || !toastText) return;
+            
+            toastText.innerText = message;
+            if (isError) {
+                toast.className = "fixed bottom-5 right-5 z-50 px-4 py-3 rounded-2xl bg-red-600 text-white text-xs font-bold shadow-2xl flex items-center gap-2 transition-all duration-300";
+            } else {
+                toast.className = "fixed bottom-5 right-5 z-50 px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-2xl flex items-center gap-2 transition-all duration-300";
+            }
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        function renderDrinkMenu() {
+            const grid = document.getElementById('drink-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            MENU_DRINKS.forEach(drink => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl p-4 border border-slate-200/80 boba-card-shadow flex flex-col justify-between space-y-4 hover:border-boba-500 transition group";
+                
+                const priceText = drink.largeOnly 
+                    ? `$${drink.prices.Large.toFixed(2)} (Large Only)` 
+                    : `From $${drink.prices.Medium.toFixed(2)}`;
+
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="relative h-44 rounded-2xl overflow-hidden bg-slate-100">
+                            <img src="${drink.img}" alt="${drink.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/600x400/14b8a6/ffffff?text=CoCo+Boba'">
+                            ${drink.largeOnly ? '<span class="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-sm">Large Only</span>' : ''}
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-slate-900 text-base leading-snug">${drink.name}</h4>
+                            <p class="text-xs text-slate-500 mt-1 leading-relaxed">${drink.desc}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                        <span class="text-sm font-black text-boba-600">${priceText}</span>
+                        <button onclick="openCustomizer('${drink.id}')" class="px-4 py-2 rounded-xl bg-boba-600 hover:bg-boba-700 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5">
+                            <span>Order</span>
+                            <i class="fa-solid fa-plus text-[10px]"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openCustomizer(drinkId) {
+            const drink = MENU_DRINKS.find(d => d.id === drinkId);
+            if (!drink) return;
+
+            currentCustomizingDrink = drink;
+            selectedSize = drink.largeOnly ? 'Large' : 'Medium';
+            selectedSweetness = '100%';
+            selectedIce = 'Regular Ice';
+
+            document.getElementById('cust-title').innerText = drink.name;
+            document.getElementById('cust-desc').innerText = drink.desc;
+            document.getElementById('cust-img').src = drink.img;
+
+            const btnMed = document.getElementById('btn-size-med');
+            const btnLrg = document.getElementById('btn-size-lrg');
+
+            if (drink.largeOnly) {
+                btnMed.classList.add('hidden');
+                btnLrg.classList.remove('hidden');
+                document.getElementById('price-lrg-lbl').innerText = `$${drink.prices.Large.toFixed(2)}`;
+            } else {
+                btnMed.classList.remove('hidden');
+                btnLrg.classList.remove('hidden');
+                document.getElementById('price-med-lbl').innerText = `$${drink.prices.Medium.toFixed(2)}`;
+                document.getElementById('price-lrg-lbl').innerText = `$${drink.prices.Large.toFixed(2)}`;
+            }
+
+            updateCustomizerSelections();
+            document.getElementById('modal-customize').classList.remove('hidden');
+        }
+
+        function selectSize(size) {
+            selectedSize = size;
+            updateCustomizerSelections();
+        }
+
+        function selectSweetness(sweet) {
+            selectedSweetness = sweet;
+            updateCustomizerSelections();
+        }
+
+        function selectIce(ice) {
+            selectedIce = ice;
+            updateCustomizerSelections();
+        }
+
+        function updateCustomizerSelections() {
+            if (!currentCustomizingDrink) return;
+
+            const btnMed = document.getElementById('btn-size-med');
+            const btnLrg = document.getElementById('btn-size-lrg');
+
+            if (selectedSize === 'Medium') {
+                btnMed.className = 'size-btn py-2.5 text-xs font-bold rounded-xl border-2 border-boba-600 bg-boba-50 text-boba-700';
+                btnLrg.className = 'size-btn py-2.5 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700';
+            } else {
+                btnLrg.className = 'size-btn py-2.5 text-xs font-bold rounded-xl border-2 border-boba-600 bg-boba-50 text-boba-700';
+                btnMed.className = 'size-btn py-2.5 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700';
+            }
+
+            document.querySelectorAll('.sweet-btn').forEach(btn => {
+                if (btn.innerText.trim() === selectedSweetness) {
+                    btn.className = 'sweet-btn py-2 text-xs font-bold rounded-xl border-2 border-boba-600 bg-boba-50 text-boba-700';
+                } else {
+                    btn.className = 'sweet-btn py-2 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700';
+                }
+            });
+
+            document.querySelectorAll('.ice-btn').forEach(btn => {
+                if (btn.innerText.trim() === selectedIce) {
+                    btn.className = 'ice-btn py-2 text-xs font-bold rounded-xl border-2 border-boba-600 bg-boba-50 text-boba-700';
+                } else {
+                    btn.className = 'ice-btn py-2 text-xs font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700';
+                }
+            });
+
+            const currentPrice = currentCustomizingDrink.prices[selectedSize];
+            document.getElementById('cust-base-price').innerText = `$${currentPrice.toFixed(2)}`;
+            document.getElementById('cust-calculated-price').innerText = `$${currentPrice.toFixed(2)}`;
+        }
+
+        function confirmAddToCart() {
+            if (!currentCustomizingDrink) return;
+
+            const unitPrice = currentCustomizingDrink.prices[selectedSize];
+            const cartItem = {
+                cartId: Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                drinkId: currentCustomizingDrink.id,
+                name: currentCustomizingDrink.name,
+                img: currentCustomizingDrink.img,
+                size: selectedSize,
+                sweetness: selectedSweetness,
+                ice: selectedIce,
+                price: unitPrice
+            };
+
+            cart.push(cartItem);
+            closeModal('modal-customize');
+            renderCartUI();
+            toggleCartDrawer(true);
+            showToast(`Added ${cartItem.name} to cart!`);
+        }
+
+        function renderCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const emptyState = document.getElementById('cart-empty-state');
+            const checkoutSec = document.getElementById('cart-checkout-section');
+            const badge = document.getElementById('cart-badge');
+            const drawerTotal = document.getElementById('cart-drawer-total');
+
+            container.innerHTML = '';
+
+            if (cart.length === 0) {
+                emptyState.classList.remove('hidden');
+                checkoutSec.classList.add('hidden');
+                badge.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                checkoutSec.classList.remove('hidden');
+                badge.classList.remove('hidden');
+                badge.innerText = cart.length;
+
+                let subtotal = 0;
+                cart.forEach((item, index) => {
+                    subtotal += item.price;
+                    const row = document.createElement('div');
+                    row.className = 'p-3 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 text-xs';
+                    row.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <img src="${item.img}" class="w-12 h-12 rounded-xl object-cover">
+                            <div>
+                                <h5 class="font-bold text-slate-900">${item.name}</h5>
+                                <p class="text-[11px] text-slate-500 font-medium mt-0.5">
+                                    ${item.size} • ${item.sweetness} Sugar • ${item.ice}
+                                </p>
+                                <span class="font-black text-boba-600 block mt-1">$${item.price.toFixed(2)}</span>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-slate-400 hover:text-red-500 p-1">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    `;
+                    container.appendChild(row);
+                });
+
+                drawerTotal.innerText = `$${subtotal.toFixed(2)}`;
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCartUI();
+        }
+
+        function exploreMenuFromCart() {
+            toggleCartDrawer(false);
+            const menuSection = document.getElementById('menu');
+            if (menuSection) {
+                menuSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function toggleCartDrawer(open) {
+            const drawer = document.getElementById('cart-drawer');
+            if (open) drawer.classList.remove('hidden');
+            else drawer.classList.add('hidden');
+        }
+
+        async function processOrderCheckout() {
+            const nameInput = document.getElementById('cust-checkout-name').value.trim();
+            const phoneInput = document.getElementById('cust-checkout-phone').value.trim();
+
+            if (!nameInput || !phoneInput) {
+                showToast("Please enter both your name and phone number.", true);
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btn-submit-order');
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "Submitting Order...";
+
+            const orderCode = 'SOB-' + Math.floor(1000 + Math.random() * 9000);
+            const orderTotal = cart.reduce((sum, item) => sum + item.price, 0);
+
+            const newOrder = {
+                orderCode: orderCode,
+                customerName: nameInput,
+                phone: phoneInput,
+                items: [...cart],
+                total: orderTotal,
+                paid: false,
+                timestamp: Date.now()
+            };
+
+            allOrders.unshift(newOrder);
+            saveOrdersToLocal();
+
+            await pushOrdersToCloud();
+
+            cart = [];
+            renderCartUI();
+            toggleCartDrawer(false);
+
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "Submit Order & Get Order Code";
+
+            showOrderReceipt(newOrder);
+        }
+
+        function showOrderReceipt(orderObj) {
+            document.getElementById('receipt-code').innerText = orderObj.orderCode;
+            document.getElementById('receipt-total-due').innerText = `$${orderObj.total.toFixed(2)}`;
+
+            const badge = document.getElementById('receipt-status-badge');
+            const msg = document.getElementById('receipt-status-msg');
+
+            if (orderObj.paid) {
+                badge.className = "px-2 py-0.5 rounded-full font-bold bg-emerald-200 text-emerald-900 text-[10px]";
+                badge.innerText = "✅ Paid & Confirmed by Owner";
+                msg.innerText = "Your payment has been received! Show up at Beaverbrook Library at 11:40 AM for pickup.";
+            } else {
+                badge.className = "px-2 py-0.5 rounded-full font-bold bg-amber-200 text-amber-900 text-[10px]";
+                badge.innerText = "⏳ Awaiting e-Transfer";
+                msg.innerHTML = `Send e-Transfer of <strong>$${orderObj.total.toFixed(2)}</strong> to <strong>orders@seaofboba.com</strong> with memo code <strong>${orderObj.orderCode}</strong>.`;
+            }
+
+            document.getElementById('modal-receipt').classList.remove('hidden');
+        }
+
+        async function pushOrdersToCloud() {
+            try {
+                await fetch(CLOUD_SYNC_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(allOrders)
+                });
+            } catch (e) {
+                console.warn("Cloud push note:", e);
+            }
+        }
+
+        async function syncOrdersFromCloud() {
+            try {
+                const res = await fetch(CLOUD_SYNC_URL + '?t=' + Date.now(), { cache: 'no-cache' });
+                if (res.ok) {
+                    const cloudData = await res.json();
+                    if (Array.isArray(cloudData) && cloudData.length > 0) {
+                        const map = new Map();
+                        allOrders.forEach(o => map.set(o.orderCode, o));
+                        cloudData.forEach(co => {
+                            if (co && co.orderCode) map.set(co.orderCode, co);
+                        });
+
+                        allOrders = Array.from(map.values()).sort((a, b) => b.timestamp - a.timestamp);
+                        saveOrdersToLocal();
+
+                        if (!document.getElementById('modal-owner-portal').classList.contains('hidden')) {
+                            renderOwnerPortal();
+                        }
+
+                        const currentReceiptCode = document.getElementById('receipt-code').innerText;
+                        if (currentReceiptCode && currentReceiptCode.startsWith('SOB-')) {
+                            const updatedOrder = allOrders.find(o => o.orderCode === currentReceiptCode);
+                            if (updatedOrder) showOrderReceipt(updatedOrder);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn("Cloud sync note:", e);
+            }
+        }
+
+        function saveOrdersToLocal() {
+            try {
+                localStorage.setItem('sea_of_boba_eom_orders', JSON.stringify(allOrders));
+            } catch (e) {}
+        }
+
+        function loadOrdersFromLocal() {
+            try {
+                const raw = localStorage.getItem('sea_of_boba_eom_orders');
+                if (raw) allOrders = JSON.parse(raw);
+            } catch (e) {}
+        }
+
+        function openTrackModal() {
+            document.getElementById('modal-track').classList.remove('hidden');
+        }
+
+        function lookupOrderCode() {
+            const codeInput = document.getElementById('track-code-input').value.trim().toUpperCase();
+            if (!codeInput) return;
+
+            const found = allOrders.find(o => o.orderCode === codeInput);
+            if (found) {
+                closeModal('modal-track');
+                showOrderReceipt(found);
+            } else {
+                showToast("Order Code not found. Please check your code.", true);
+            }
+        }
+
+        function handleLogoClick() {
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+            logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 800);
+
+            if (logoClickCount >= 2) {
+                logoClickCount = 0;
+                triggerOwnerAuth();
+            }
+        }
+
+        function triggerOwnerAuth() {
+            document.getElementById('pin-input').value = '';
+            document.getElementById('modal-pin').classList.remove('hidden');
+        }
+
+        function submitOwnerPin() {
+            const pin = document.getElementById('pin-input').value.trim();
+            if (pin === '0515') {
+                closeModal('modal-pin');
+                renderOwnerPortal();
+                document.getElementById('modal-owner-portal').classList.remove('hidden');
+            } else {
+                showToast("Incorrect passcode.", true);
+            }
+        }
+
+        function renderOwnerPortal() {
+            const listContainer = document.getElementById('owner-orders-list');
+            const checklistContainer = document.getElementById('owner-coco-checklist');
+
+            listContainer.innerHTML = '';
+            checklistContainer.innerHTML = '';
+
+            const drinkCounts = {};
+            allOrders.forEach(o => {
+                o.items.forEach(item => {
+                    const key = `${item.name} (${item.size}, ${item.sweetness}, ${item.ice})`;
+                    drinkCounts[key] = (drinkCounts[key] || 0) + 1;
+                });
+            });
+
+            const keys = Object.keys(drinkCounts);
+            if (keys.length === 0) {
+                checklistContainer.innerHTML = `<span class="text-slate-500 col-span-2">No drinks ordered yet.</span>`;
+            } else {
+                keys.forEach(k => {
+                    const row = document.createElement('div');
+                    row.className = "bg-slate-800 p-2 rounded-xl flex justify-between items-center";
+                    row.innerHTML = `<span class="text-slate-300 truncate">${k}</span> <span class="font-bold text-amber-400 text-sm ml-2">x${drinkCounts[k]}</span>`;
+                    checklistContainer.appendChild(row);
+                });
+            }
+
+            if (allOrders.length === 0) {
+                listContainer.innerHTML = `<div class="p-6 text-center text-xs text-slate-400">No student orders submitted yet.</div>`;
+                return;
+            }
+
+            allOrders.forEach(order => {
+                const card = document.createElement('div');
+                card.className = "p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3 text-xs";
+
+                const itemsText = order.items.map(i => `• ${i.name} (${i.size}, ${i.sweetness}, ${i.ice})`).join('<br>');
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start border-b border-slate-200/80 pb-2">
+                        <div>
+                            <span class="font-mono font-black text-boba-600 text-sm">${order.orderCode}</span>
+                            <span class="font-bold text-slate-900 block mt-0.5">${order.customerName} (${order.phone})</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full font-bold text-[10px] ${order.paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${order.paid ? '✅ Paid' : '⏳ Unpaid'}
+                        </span>
+                    </div>
+
+                    <div class="text-slate-600 text-[11px] leading-relaxed">
+                        ${itemsText}
+                    </div>
+
+                    <div class="flex justify-between items-center pt-1 border-t border-slate-200/80">
+                        <span class="font-black text-slate-900 text-sm">$${order.total.toFixed(2)}</span>
+                        <button onclick="togglePaymentStatus('${order.orderCode}')" class="px-3 py-1.5 rounded-xl font-bold text-[11px] transition ${order.paid ? 'bg-slate-200 text-slate-700 hover:bg-slate-300' : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm'}">
+                            ${order.paid ? 'Mark Unpaid' : 'Confirm e-Transfer Received'}
+                        </button>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        async function togglePaymentStatus(code) {
+            const order = allOrders.find(o => o.orderCode === code);
+            if (!order) return;
+
+            order.paid = !order.paid;
+            saveOrdersToLocal();
+            renderOwnerPortal();
+
+            await pushOrdersToCloud();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
